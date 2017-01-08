@@ -1,7 +1,7 @@
 -include ef.gy/base.mk include/ef.gy/base.mk
 
 NAME:=topologic
-VERSION:=8
+VERSION:=11
 
 LIBRARIES:=libxml-2.0
 FRAMEWORKS:=

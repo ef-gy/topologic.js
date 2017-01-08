@@ -19,9 +19,9 @@
  * This file is part of the Topologic project, which is released as open source
  * under the terms of an MIT/X11-style licence, described in the COPYING file.
  *
- * \see Project Documentation: http://ef.gy/documentation/topologic
- * \see Project Source Code: https://github.com/ef-gy/topologic
- * \see Licence Terms: https://github.com/ef-gy/topologic/blob/master/COPYING
+ * \see Project Documentation: http://ef.gy/documentation/topologic.js
+ * \see Project Source Code: https://github.com/ef-gy/topologic.js
+ * \see Licence Terms: https://github.com/ef-gy/topologic.js/blob/master/COPYING
  */
 
 /**\defgroup frontend-webgl WebGL frontend

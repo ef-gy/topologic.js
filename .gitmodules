@@ -2,3 +2,6 @@
 	path = dependencies/libefgy
 	url = https://github.com/ef-gy/libefgy.git
   branch = master
+[submodule "dependencies/topologic"]
+	path = dependencies/topologic
+	url = https://github.com/ef-gy/topologic.git
