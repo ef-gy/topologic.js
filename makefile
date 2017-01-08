@@ -1,26 +1,17 @@
 -include ef.gy/base.mk include/ef.gy/base.mk
 
-NAME:=topologic
+NAME:=topologic.js
 VERSION:=11
-
-LIBRARIES:=libxml-2.0
-FRAMEWORKS:=
 
 JQUERY:=https://code.jquery.com/jquery-2.1.1.js
 JQUERYMOBILE:=https://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.js
 JQUERYMOBILECSS:=https://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css
 
-ifeq ($(UNAME),Darwin)
-PCCFLAGS:=-I/usr/include/libxml2
-PCLDFLAGS:=-lxml2 $(addprefix -framework ,$(FRAMEWORKS))
-endif
 CXXFLAGS:=$(CFLAGS) -fno-exceptions
 EMCFLAGS:=--pre-js src/web/setup.js --post-js src/web/glue.js -O3 --llvm-lto 3 -fno-exceptions --memory-init-file 0 -s NO_FILESYSTEM=1 -s ELIMINATE_DUPLICATE_FUNCTIONS=1 -s OUTLINING_LIMIT=20480 -DNOVAO -DWEBGL -s ASSERTIONS=0 -s NO_EXIT_RUNTIME=1 -s ALLOW_MEMORY_GROWTH=1 -s DISABLE_EXCEPTION_CATCHING=1 -s PRECISE_I64_MATH=0 -s USE_CLOSURE_COMPILER=1
 EMXXFLAGS:=$(EMCFLAGS)
 
 JSFUNCTIONS:=['_main','_interpretDrag','_setActiveDimension','_forceRedraw','_setFlameColouring','_resetColourMap','_setViewportSize','_getJSON','_getSVG','_getArgs','_parseJSON','_parseArgs','_getModels','_initialiseGL']
-
-BINARIES:=$(filter-out %-sdl,$(basename $(notdir $(wildcard src/*.cpp)))) $(addprefix test-case-,$(notdir $(wildcard src/test-case/*.cpp)))
 
 %.html: src/%.cpp include/*/*.h
 	$(EMXX) -std=c++0x -Iinclude/ -D NOLIBRARIES $(EMXXFLAGS) $< $(LDFLAGS) -o $@

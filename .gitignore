@@ -3,16 +3,12 @@
 *.svg
 topologic.js
 topologic-glut
-topologic-json.js
-!topologic-json.svg
 documentation/html
 documentation/xml
 topologic-glut.html
 topologic-sdl.js
 topologic-sdl.html
 !topologic-icon.svg
-*.xcuser*
-*.xccheckout
 documentation/*.tag
 *.user
 build-*
