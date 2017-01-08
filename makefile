@@ -31,6 +31,9 @@ topologic-web.css: $(DOWNLOADS)/jquery.mobile.css src/web/topologic.css
 topologic-web.html: src/web/topologic.xhtml xslt/web-prepare.xslt topologic-web.js topologic-web.css
 	$(XSLTPROC) -o "$@" xslt/web-prepare.xslt $<
 
+topologic.js: topologic-web.js src/topologic.js
+	closure-compiler --js topologic-web.js --js src/topologic.js >$@
+
 src/chrome/topologic.js: topologic-web.js $(DOWNLOADS)/jquery.js $(DOWNLOADS)/jquery.mobile.js
 	closure-compiler --js $(DOWNLOADS)/jquery.js --js $(DOWNLOADS)/jquery.mobile.js --js topologic-web.js >$@
 

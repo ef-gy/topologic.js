@@ -2,6 +2,7 @@
 *.swp
 *.svg
 topologic.js
+!src/topologic.js
 topologic-glut
 documentation/html
 documentation/xml
