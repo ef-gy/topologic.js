@@ -17,8 +17,6 @@ topologic.Topologic.prototype.setActiveDimension = Module.cwrap(
   'setActiveDimension', 'number', ['number']);
 topologic.Topologic.prototype.setFlameColouring = Module.cwrap(
   'setFlameColouring', null, ['number']);
-topologic.Topologic.prototype.setViewportSize = Module.cwrap(
-  'setViewportSize', null, ['number','number']);
 topologic.Topologic.prototype.resetColourMap = Module.cwrap(
   'resetColourMap', null, []);
 topologic.Topologic.prototype.getJSON = Module.cwrap(
@@ -38,6 +36,8 @@ topologic.Topologic.prototype.getModels = Module.cwrap(
 
 // These two are GL-specific; it may make more sense to put them in a separate
 // module.
+topologic.Topologic.prototype.setViewportSize = Module.cwrap(
+  'setViewportSize', null, ['number','number']);
 topologic.Topologic.prototype.forceRedraw = Module.cwrap(
   'forceRedraw', null, []);
 topologic.Topologic.prototype.initialiseGL = Module.cwrap(

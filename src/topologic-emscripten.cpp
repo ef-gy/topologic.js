@@ -47,15 +47,15 @@
  * grouped together in the documentation for convenience.
  */
 
-#if !defined(EMSCRIPTEN)
-#error "This file is only intended to be used with the emscripten compiler!"
-#endif
-
 #include <emscripten.h>
 
+#if !defined(NO_OPENGL)
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include "SDL/SDL_opengl.h"
+#else
+using GLfloat = double;
+#endif
 
 #include <iostream>
 #include <topologic/parse.h>
@@ -85,14 +85,16 @@ static topologic::state<GLfloat, MAXDEPTH> topologicState;
 // when compiling with emscripten these functions are exported so that they can
 // be used in foreign JS code.
 extern "C" {
+#if !defined(NO_OPENGL)
 int initialiseGL(void);
 void process(void);
+void forceRedraw(void);
+void setViewportSize(int, int);
+#endif
 int interpretDrag(double, double, double);
 int setActiveDimension(int);
-void forceRedraw(void);
 void setFlameColouring(bool);
 void resetColourMap(void);
-void setViewportSize(int, int);
 const char *getJSON(void);
 const char *getSVG(void);
 const char *getArgs(void);
@@ -101,7 +103,8 @@ void parseArgs(const char *);
 const char *getModels();
 }
 
-/**\brief Is a mouse button currently being?
+#if !defined(NO_OPENGL)
+/**\brief Is a mouse button currently being pressed?
  *
  * Set to 'true' whenever a mouse button has been pressed; reset to 'false'
  * when a button is no longer being pressed. Used to implement mouse 'drag'
@@ -145,17 +148,6 @@ static bool SDLinitialised = false;
  * current scene.
  */
 void forceRedraw(void) { doRender = true; }
-
-/**\ingroup topologic-javascript-exports
- * \brief Genere new colour map
- *
- * Creates a new colour map for the fractal flame rendering algorithm. The
- * colours in that map are chosen at random.
- */
-void resetColourMap(void) {
-  topologicState.opengl.setColourMap();
-  doRender = true;
-}
 
 /**\ingroup topologic-javascript-exports
  * \brief Resize viewport
@@ -251,25 +243,6 @@ void process(void) {
 }
 
 /**\ingroup topologic-javascript-exports
- * \brief Topologic/SDL main function
- *
- * Initialise the global state to a basic 4-cube, then have emscripten take over
- * by setting a main function and returning.
- *
- * The command line arguments are unused.
- *
- * \returns 0 on success, nonzero otherwise.
- */
-int main(int, char **) {
-  efgy::geometry::with<GLfloat, topologic::updateModel, MAXDEPTH>(
-      topologicState, "cartesian", "cube", 4, 4);
-
-  emscripten_set_main_loop(process, 30, 0);
-
-  return 0;
-}
-
-/**\ingroup topologic-javascript-exports
  * \brief Initialise SDL and the GL context
  *
  * Call this function to set up the OpenGL context using standard SDL calls.
@@ -301,6 +274,43 @@ int initialiseGL(void) {
   glDisable(GL_CULL_FACE);
 
   SDLinitialised = true;
+
+  return 0;
+}
+#endif
+
+/**\ingroup topologic-javascript-exports
+ * \brief Genere new colour map
+ *
+ * Creates a new colour map for the fractal flame rendering algorithm. The
+ * colours in that map are chosen at random.
+ */
+void resetColourMap(void) {
+#if !defined(NO_OPENGL)
+  topologicState.opengl.setColourMap();
+  doRender = true;
+#else
+#warning "resetColourMap() needs an implementation."
+#endif
+}
+
+/**\ingroup topologic-javascript-exports
+ * \brief Topologic/SDL main function
+ *
+ * Initialise the global state to a basic 4-cube, then have emscripten take over
+ * by setting a main function and returning.
+ *
+ * The command line arguments are unused.
+ *
+ * \returns 0 on success, nonzero otherwise.
+ */
+int main(int, char **) {
+  efgy::geometry::with<GLfloat, topologic::updateModel, MAXDEPTH>(
+      topologicState, "cartesian", "cube", 4, 4);
+
+#if !defined(NO_OPENGL)
+  emscripten_set_main_loop(process, 30, 0);
+#endif
 
   return 0;
 }
@@ -458,8 +468,7 @@ void parseArgs(const char *pArgs) {
  * \brief Get JSON list of models and formats
  *
  * Similar to the --version flag of the proper binary; this returns a JSON
- *string
- * with all the available models and formats.
+ * string with all the available models and formats.
  *
  * \returns JSON string of all the available models and formats.
  */
